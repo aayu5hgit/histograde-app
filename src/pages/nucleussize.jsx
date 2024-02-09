@@ -5,6 +5,7 @@ function CellSize() {
     const [imageFile, setImageFile] = useState(null);
     const [, setResponse] = useState({});
     const [resultImage, setResultImage] = useState('');
+    const [normalizedImage, setNormalizedImage] = useState(null);
     const [totalNuclei, setTotalNuclei] = useState('');
     const [averageTop, setAverageTop] = useState('');
     const [averageMiddle, setAverageMiddle] = useState('');
@@ -32,9 +33,9 @@ function CellSize() {
 
             const data = await res.json();
             setResponse(data);
-            setTotalNuclei(data.totalNuclei);
-            setResultImage(`data:image/jpg;base64,${data.resultImage}`);
+            setTotalNuclei(data.nucleusContoursCount);
             setOriginalImage(`data:image/jpg;base64,${data.originalImage}`);
+            setNormalizedImage(`data:image/jpg;base64,${data.nucleusContoursImage}`);
             setAverageTop(data.averageTop);
             setAverageMiddle(data.averageMiddle);
             setAverageBottom(data.averageBottom);
@@ -78,7 +79,7 @@ function CellSize() {
                   }
                   itemTwo={
                     <ReactCompareSliderImage
-                      src={resultImage}
+                      src={normalizedImage}
                       alt="Image two"
                     />
                   }
@@ -98,7 +99,7 @@ function CellSize() {
                       </p>
                     </div>
                     <h3 className="mb-2 font-semibold text-gray-500 text-md">
-                      Average Cell Size
+                      Average Nuclei Size
                     </h3>
                     <div class="my-3 flex items-center justify-between p-4 bg-red-100">
                       <p class="font-bold text-gray-500">Top Section</p>

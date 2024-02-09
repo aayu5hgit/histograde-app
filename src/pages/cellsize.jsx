@@ -75,7 +75,7 @@ function CellSize() {
 
         {resultImage && (
           <div className="flex flex-col items-center justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+            <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
               <div>
                 <p className="mb-2 text-lg font-semibold">Results</p>
                 <ReactCompareSlider
@@ -95,7 +95,7 @@ function CellSize() {
                 />
               </div>
               <div className="grid my-auto text-left md:flex ">
-                <div class="w-full md:w-1/3 cursor-pointer rounded-l-lg border bg-[#f0f0f0] p-2 shadow-none duration-150 hover:shadow-xl">
+                <div class="w-full md:w-1/2 cursor-pointer rounded-l-lg border bg-[#f0f0f0] p-2 shadow-none duration-150 hover:shadow-xl">
                   <h2 class="font-bold text-gray-800 text-2xl text-center mt-5">
                     Detected Class
                   </h2>
