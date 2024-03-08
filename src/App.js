@@ -5,6 +5,8 @@ import Home from './pages/home.jsx';
 import CellSize from './pages/cellsize.jsx';
 import NucleusSize from './pages/nucleussize.jsx';
 import Select from './pages/select.jsx';
+import KeratinPearls from './pages/keratinpearls.jsx';
+import Mitosis from './pages/mitosis.jsx';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/select" element={<Select/>} />
         <Route path="/cellsize" element={<CellSize/>} />
         <Route path="/nucleussize" element={<NucleusSize/>} />
+        <Route path="/keratinpearls" element={<KeratinPearls/>} />
+        <Route path="/mitosis" element={<Mitosis/>} />
         </Routes>
     </Router>
   );
