@@ -7,83 +7,148 @@ import {
   StyleSheet,
   PDFDownloadLink,
   Image,
-  Font,
 } from "@react-pdf/renderer";
-import oimg from "../assets/m1.jpeg";
-import rimg from "../assets/m1r1.JPEG";
 import logo from "../assets/logo.png";
 import Light from "../assets/fonts/Light.ttf";
+import oimg from "../assets/m1.jpeg"; // Placeholder for original image
+import rimg from "../assets/m1r1.JPEG"; // Placeholder for result image
 
 function Result() {
+  const [imageFile, setImageFile] = useState(null);
   const [originalImage, setOriginalImage] = useState("");
   const [totalNuclei, setTotalNuclei] = useState("");
+  const [totalNucleiSize, setTotalNucleiSize] = useState("");
+  const [nucleiImage, setNucleiImage] = useState("");
+  const [nucleiClass, setNucleiClass] = useState("");
+  const [totalCell, setTotalCell] = useState("");
+  const [totalCellSize, setTotalCellSize] = useState("");
+  const [cellImage, setCellImage] = useState("");
+  const [cellClass, setCellClass] = useState("");
+  const [resultImage, setResultImage] = useState("");
   const [averageTop, setAverageTop] = useState("");
   const [averageMiddle, setAverageMiddle] = useState("");
   const [averageBottom, setAverageBottom] = useState("");
+  const [category, setCategory] = useState("");
+  const [intensity, setIntensity] = useState("");
+  const [intensityImage, setIntensityImage] = useState("");
+  const [intensityTop, setIntensityTop] = useState("");
+  const [intensityMiddle, setIntensityMiddle] = useState("");
+  const [intensityBottom, setIntensityBottom] = useState("");
+  const [intensityClass, setIntensityClass] = useState("");
+  const [ncratio, setNcratio] = useState("");
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
 
-    // Static data for demonstration
-    const staticData = {
-      nucleusContoursCount: 1,
-      originalImage: oimg, // Static path for original image
-      nucleusContoursImage: rimg, // Static path for normalized image
-      averageTop: "50", // Static value for average top
-      averageMiddle: "40", // Static value for average middle
-      averageBottom: "45", // Static value for average bottom
-    };
+    try {
+      const formData = new FormData();
+      const file = e.target.files[0];
+      if (file) {
+      setImageFile(file);
+      }
+      formData.append("image", e.target.files[0]);
 
-    setTotalNuclei(staticData.nucleusContoursCount);
-    setOriginalImage(staticData.originalImage);
-    setAverageTop(staticData.averageTop);
-    setAverageMiddle(staticData.averageMiddle);
-    setAverageBottom(staticData.averageBottom);
+      // Nucleus Size API
+      const nucleusSizeResponse = await fetch(
+        "http://localhost:5000/api/nucleus_size",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const nucleusSizeData = await nucleusSizeResponse.json();
+
+      // Set state with nucleus size data
+      setNucleiImage(`data:image/jpg;base64,${nucleusSizeData.resultImage}`);
+      setTotalNuclei(nucleusSizeData.totalNuclei);
+      setTotalNucleiSize(nucleusSizeData.totalNucleiSize);
+      setAverageTop(nucleusSizeData.averageTop);
+      setAverageMiddle(nucleusSizeData.averageMiddle);
+      setAverageBottom(nucleusSizeData.averageBottom);
+
+      // Cellular Size API
+      const cellularSizeResponse = await fetch(
+        "http://localhost:5000/api/cell_size",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const cellularSizeData = await cellularSizeResponse.json();
+
+      // Set state with cellular size data
+      setCellImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
+      setTotalCell(cellularSizeData.totalNuclei);
+      setTotalCellSize(cellularSizeData.totalCellSize);
+      setAverageTop(cellularSizeData.averageTop);
+      setAverageMiddle(cellularSizeData.averageMiddle);
+      setAverageBottom(cellularSizeData.averageBottom);
+      setCellClass(cellularSizeData.classificationResult);
+
+      // Update result image
+      setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
+      
+      // Cellular Hyperch API
+      const hyperchromasiaResponse = await fetch(
+        "http://localhost:5000/api/hyperchromasia",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const hyperchromasiaData = await hyperchromasiaResponse.json();
+
+      // Set state with cellular size data
+      setIntensityImage(hyperchromasiaData.original_image);
+      setIntensity(hyperchromasiaData.overall_average_intensity);
+      setIntensityTop(hyperchromasiaData.average_intensity_top_section);
+      setIntensityMiddle(hyperchromasiaData.average_intensity_middle_section);
+      setIntensityBottom(hyperchromasiaData.average_intensity_bottom_section);
+      setIntensityClass(hyperchromasiaData.classification);
+
+      // Update result image
+      setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
+      const numericTotalNucleiSize = parseFloat(totalNucleiSize);
+      const numericTotalCellSize = parseFloat(totalCellSize);
+      setNcratio(
+        numericTotalCellSize !== 0 ? numericTotalNucleiSize / numericTotalCellSize : 0
+      );
+      console.log(ncratio);
+    } catch (error) {
+      console.error("Error processing image:", error);
+    }
   };
 
   const generatePDF = () => {
     const features = [
       {
-        title: "Abnormal Variation in Cell Size and Shape",
+        title: "Abnormal Variation in Nucleus Size",
         theory:
-          "Abnormal variation in cell size and shape is a hallmark of dysplasia, which is often observed in pre-cancerous lesions. Dysplastic cells may exhibit pleomorphism, irregular nuclear morphology, and altered nuclear-to-cytoplasmic ratio.",
-        result: "Increased abnormal variation observed.",
-        category: "Moderate",
+          "Abnormal variation in nucleus size is a hallmark of dysplasia, often observed in pre-cancerous lesions. Dysplastic nuclei may exhibit enlargement, irregular contours, hyperchromasia, and abnormal chromatin distribution.",
+        result: "",
+        values: totalNuclei,
+        image: nucleiImage,
+        class: cellClass,
       },
       {
-        title: "Abnormal Variation in Nucleus Size and Shape",
+        title: "Abnormal Variation in Cellular Size",
         theory:
-          "Abnormal variation in nucleus size and shape is another characteristic feature of dysplasia. Dysplastic nuclei often show enlargement, irregular contours, hyperchromasia, and abnormal chromatin distribution.",
-        result: "Increased abnormal variation observed.",
-        category: "Severe",
-      },
+          "Abnormal variation in cellular size, especially in the context of dysplasia, indicates cellular atypia and is associated with increased risk of malignancy.",
+        result: "",
+        values: totalCell,
+        image: cellImage,
+        class: cellClass,
+      }, 
       {
-        title: "Increased Number of Nucleoli",
+        title: "Hyperchromasia (Intensity)",
         theory:
-          "Nucleoli are substructures within the nucleus responsible for ribosomal RNA synthesis. An increased number of nucleoli may indicate increased cellular activity and proliferation, which can be indicative of dysplastic or malignant cells.",
-        result: "Elevated number of nucleoli observed.",
-        category: "Severe",
-      },
-      {
-        title: "Nuclear-to-Cytoplasmic Ratio (N:C Ratio)",
-        theory:
-          "The nuclear-to-cytoplasmic ratio refers to the ratio of the size of the cell nucleus to the size of the cytoplasm. An increased N:C ratio is often observed in dysplastic cells, where the nucleus occupies a larger proportion of the cell volume.",
-        result: "Elevated nuclear-to-cytoplasmic ratio observed.",
-        category: "Moderate",
-      },
-      {
-        title: "Presence of Keratin Pearls",
-        theory:
-          "Keratin pearls are concentrically arranged masses of keratinized squamous epithelial cells often seen in well-differentiated squamous cell carcinomas. Their presence indicates terminal differentiation of neoplastic cells.",
-        result: "Keratin pearls observed.",
-        category: "Severe",
-      },
-      {
-        title: "Presence of Apoptotic Mitotic Figures",
-        theory:
-          "Apoptotic mitotic figures are cells undergoing mitosis with morphological features of apoptosis, such as condensed chromatin and fragmented nuclei. Their presence suggests abnormal cell proliferation and turnover, characteristic of dysplasia or malignancy.",
-        result: "Apoptotic mitotic figures observed.",
-        category: "Moderate",
+          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+        result: "",
+        values: ncratio,
+        image: intensityImage,
+        class: intensityClass,
       },
     ];
 
@@ -99,20 +164,20 @@ function Result() {
         <Text style={styles.subtitle} className="font-extrabold">
           {feature.title}
         </Text>
+        <Text style={styles.text}>{feature.theory}</Text>
+
+        <Image style={styles.orgImg} src={feature.image} />
+
         <Text style={styles.text}>
-          <Text style={{ fontWeight: "semibold" }}></Text>
-          {feature.theory}
+          <Text className="font-bold">RESULT</Text>
         </Text>
 
-        <Image style={styles.orgImg} src={originalImage} />
-
         <Text style={styles.text}>
-          <Text className="font-bold">Result:</Text> {feature.result}
+          Total: {feature.values}
         </Text>
         <Text style={styles.categoryText}>
-          Detected Category: {feature.category}
+          Detected Category: {feature.class}
         </Text>
-
         <Text
           style={styles.pageNumber}
           render={({ pageNumber, totalPages }) =>
@@ -123,42 +188,27 @@ function Result() {
       </Page>
     ));
 
-    const pdf = <Document>{pages}</Document>;
-
-    console.log(pdf);
-    return pdf;
+    return <Document>{pages}</Document>;
   };
 
   return (
     <div className="container p-8 mx-auto">
-      <h1 className="mb-6 text-3xl font-bold text-gray-700">Overall Result</h1>
+      <h1 className="my-10 text-3xl font-bold text-gray-700 text-center">Complete Cell Test</h1>
       <form onSubmit={handleSubmit} className="mb-6">
-        <label className="block mb-2 text-sm font-semibold">Image File:</label>
-        <input
-          type="file"
-          accept="image/*"
-          className="w-30% p-2 border border-gray-300 rounded focus:outline-none focus:border-pink-500"
-        />
-        <button
-          type="submit"
-          className="flex px-4 py-2 mt-4 text-white bg-pink-500 rounded hover:bg-purple-300 focus:outline-none focus:shadow-outline-blue"
-        >
-          Submit
-        </button>
-      </form>
-
-      {originalImage && (
-        <div className="flex items-center justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
-            <div>
-              <div className="w-full justify-center cursor-pointer rounded-l-lg border bg-[#f0f0f0] p-2 shadow-none duration-150 hover:shadow-xl">
-                <div className="p-10 text-2xl font-semibold text-center">
-                  <h1>Result</h1>
-                  <p className="text-5xl font-semibold">Category: Moderate</p>
-                </div>
-              </div>
+        <div class="flex-1 items-center max-w-screen-sm mx-auto mb-3 space-y-4 sm:flex sm:space-y-0">
+          <div class="relative w-full">
+            <div class="items-center justify-center max-w-xl mx-auto">
+              <label class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none" id="drop"><span class="flex items-center space-x-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg><span class="font-medium text-gray-600">{imageFile ? imageFile.name : 'Drop Image or Upload here'}</span></span>
+                <input t type="file"
+                  accept="image/*"
+                  onChange={handleSubmit} class="hidden" id="input" /></label>
             </div>
           </div>
+        </div>
+      </form>
+
+      {resultImage && (
+        <div className="flex items-center justify-center">
           <PDFDownloadLink
             document={generatePDF()}
             fileName="Histograde-Report.pdf"
@@ -174,10 +224,7 @@ function Result() {
     </div>
   );
 }
-// Font.register({
-//     family: 'Oswald',
-//     src: {Light}
-//   });
+
 const styles = StyleSheet.create({
   body: {
     paddingTop: 35,

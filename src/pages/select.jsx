@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 function ProductCard({ product }) {
     return (
         <div className="w-full">
-
         <div className="p-3 duration-500 bg-gray-100 shadow-md rounded-xl hover:shadow-xl hover:cursor-pointer">
                 <img src={product.imageUrl} alt={product.name} className="object-cover mx-auto h-80 w-80 rounded-t-xl" />
                 <div className="w-full px-4 py-3">
@@ -39,10 +38,10 @@ function Select() {
             "link": "/nucleussize",
         },
         {
-            "name": "Increased N:C Ratio",
+            "name": "Hyperchromasia",
             "imageUrl": "https://img.freepik.com/free-photo/beautiful-fertility-concept-3d-rendering_23-2149230687.jpg?size=626&ext=jpg&ga=GA1.1.1379558139.1705562006&semt=ais",
             "price": "Test",
-            "link": "/ncratio",
+            "link": "/hyperchromasia",
         },
         {
             "name": "Atypical Mitosis Figures",

@@ -1,4 +1,4 @@
-// CellSize.js
+// CellSize.jsx
 import React, { useState } from "react";
 import {
   ReactCompareSlider,
@@ -52,28 +52,30 @@ function CellSize() {
   return (
     <div>
       <div className="container p-8 mx-auto">
-        <h1 className="mb-6 text-3xl font-bold text-gray-700">
+        <h1 className="my-10 text-3xl font-bold text-gray-700 text-center">
           Abnormal Variation in Cell Size
         </h1>
         <form onSubmit={handleSubmit} className="mb-6">
-          <label className="block mb-2 text-sm font-semibold">
-            Image File:
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-30% p-2 border border-gray-300 rounded focus:outline-none focus:border-pink-500"
-          />
+          <div class="items-center justify-center max-w-xl mx-auto">
+            <label class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none" id="drop">
+              <span class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <span class="font-medium text-gray-600">{imageFile ? imageFile.name : 'Drop Image or Upload here'}</span>
+              </span>
+              <input type="file" onChange={handleFileChange} class="hidden" accept="image/*" id="input"/>
+            </label>
+          </div>
           <button
             type="submit"
-            className="flex px-4 py-2 mt-4 text-white bg-pink-500 rounded hover:bg-purple-300 focus:outline-none focus:shadow-outline-blue"
+            className="w-1/5 justify-center mx-auto flex mt-4 bg-pink-500 text-white px-4 py-2 rounded hover:bg-purple-300 focus:outline-none focus:shadow-outline-blue"
           >
             Submit
           </button>
         </form>
 
-        {resultImage && (
+        {originalImage && (
           <div className="flex flex-col items-center justify-center">
             <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
               <div>

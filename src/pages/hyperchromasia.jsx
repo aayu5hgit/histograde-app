@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 
-function CellSize() {
+function Hyperchromasia() {
     const [imageFile, setImageFile] = useState(null);
     const [, setResponse] = useState({});
     const [resultImage, setResultImage] = useState('');
-    const [normalizedImage, setNormalizedImage] = useState(null);
-    const [totalNuclei, setTotalNuclei] = useState('');
+    const [classification, setClassification] = useState('');
+    const [intensity, setIntensity] = useState('');
     const [averageTop, setAverageTop] = useState('');
     const [averageMiddle, setAverageMiddle] = useState('');
     const [averageBottom, setAverageBottom] = useState('');
@@ -26,19 +26,20 @@ function CellSize() {
             const formData = new FormData();
             formData.append('image', imageFile);
 
-            const res = await fetch('http://localhost:5000/api/nucleus_size', {
+            const res = await fetch('http://localhost:5000/api/hyperchromasia', {
                 method: 'POST',
                 body: formData,
             });
 
             const data = await res.json();
             setResponse(data);
-            setTotalNuclei(data.totalNuclei);
-            setOriginalImage(`data:image/jpg;base64,${data.originalImage}`);
-            setResultImage(`data:image/jpg;base64,${data.resultImage}`);
-            setAverageTop(data.averageTop);
-            setAverageMiddle(data.averageMiddle);
-            setAverageBottom(data.averageBottom);
+            setOriginalImage(data.original_image);
+            setResultImage(data.result_image);
+            setIntensity(data.overall_average_intensity);
+            setAverageTop(data.average_intensity_top_section);
+            setAverageMiddle(data.average_intensity_middle_section);
+            setAverageBottom(data.average_intensity_bottom_section);
+            setClassification(data.classification);
         } catch (error) {
             console.error('Error submitting image:', error);
         }
@@ -47,7 +48,7 @@ function CellSize() {
     return (
         <div>
             <div className="container mx-auto p-8">
-                <h1 className="my-10 text-3xl font-bold text-gray-700 text-center">Abnormal Variation in Nucleus Size</h1>
+                <h1 className="my-10 text-3xl font-bold text-gray-700 text-center">Hyperchromasia (Intensity)</h1>
                 <form onSubmit={handleSubmit} className="mb-6"> 
                     <div class="items-center justify-center max-w-xl mx-auto">
       <label class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none" id="drop"><span class="flex items-center space-x-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
@@ -79,26 +80,35 @@ function CellSize() {
                   itemTwo={
                     <ReactCompareSliderImage
                       src={resultImage}
-                      alt="Image two"
+                      alt="Image Two"
                     />
                   }
                 />
               </div>
               <div className="grid my-auto text-left md:flex ">
-            
+              <div class="w-full md:w-1/2 cursor-pointer rounded-l-lg border bg-[#f0f0f0] p-2 shadow-none duration-150 hover:shadow-xl">
+                  <h2 class="font-bold text-gray-800 text-2xl text-center mt-5">
+                    Detected Class
+                  </h2>
+                  <div class="w-52 h-52 mx-auto my-10 flex items-center justify-center rounded-full bg-green-200">
+                    <p class="font-bold text-4xl text-green-700">
+                      {classification}
+                    </p>
+                  </div>
+                </div>
                 <div class="w-full md:w-1/2 cursor-pointer rounded-r-lg border bg-[#f0f0f0] p-2 shadow-none duration-150 hover:shadow-xl">
                   <h2 class="font-bold text-gray-800 text-2xl text-center mt-5">
                     Statistics
                   </h2>
                   <div class="p-1">
                     <div class="my-6 flex items-center justify-between p-4 bg-blue-100">
-                      <p class="font-bold text-gray-500">Total Nuclei</p>
+                      <p class="font-bold text-gray-500">Overall Intensity</p>
                       <p class="rounded-full bg-blue-500 px-2 py-1 text-xs font-semibold text-white">
-                        {totalNuclei}
+                        {intensity}
                       </p>
                     </div>
                     <h3 className="mb-2 font-semibold text-gray-500 text-md">
-                      Average Nuclei Size
+                      Average Nuclei Intensity
                     </h3>
                     <div class="my-3 flex items-center justify-between p-4 bg-red-100">
                       <p class="font-bold text-gray-500">Top Section</p>
@@ -128,6 +138,6 @@ function CellSize() {
         </div>
     );
 }
-export default CellSize;
+export default Hyperchromasia;
 
    
