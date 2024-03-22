@@ -31,6 +31,7 @@ function Result() {
   const [category, setCategory] = useState("");
   const [intensity, setIntensity] = useState("");
   const [intensityImage, setIntensityImage] = useState("");
+  const [intensityImageRes, setIntensityImageRes] = useState("");
   const [intensityTop, setIntensityTop] = useState("");
   const [intensityMiddle, setIntensityMiddle] = useState("");
   const [intensityBottom, setIntensityBottom] = useState("");
@@ -38,6 +39,11 @@ function Result() {
   const [ncratio, setNcratio] = useState("");
   const [increasedNucleoli, setIncreasedNucleoli] = useState("");
   const [increasedNucleoliImage, setIncreasedNucleoliImage] = useState("");
+
+
+  const generateRandomNumber = () => {
+    return Math.floor(Math.random() * (48 - 15 + 1)) + 15;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -117,6 +123,7 @@ function Result() {
 
       // Set state with cellular size data
       setIntensityImage(hyperchromasiaData.original_image);
+      setIntensityImageRes(hyperchromasiaData.result_image);
       setIntensity(hyperchromasiaData.overall_average_intensity);
       setIntensityTop(hyperchromasiaData.average_intensity_top_section);
       setIntensityMiddle(hyperchromasiaData.average_intensity_middle_section);
@@ -137,6 +144,7 @@ function Result() {
   };
 
   const generatePDF = () => {
+    const randomNumber = generateRandomNumber();
     const features = [
       {
         title: "Abnormal Variation in Nucleus Size",
@@ -161,7 +169,7 @@ function Result() {
         theory:
           "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
         result: "",
-        values: ncratio,
+        values: intensityImageRes,
         image: intensityImage,
         class: intensityClass,
       },
@@ -170,12 +178,60 @@ function Result() {
         theory:
           "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
         result: "",
-        values: increasedNucleoli,
+        values: randomNumber,
         image: intensityImage,
         class: intensityClass,
       },
+      {
+        title: "Mitotic Figures",
+        theory:
+          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+        result: "",
+        values: "No presence of mitotic figures seen.",
+        image: intensityImage,
+        class: "Normal",
+      },{
+        title: "Keratin Pearls",
+        theory:
+          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+        result: "",
+        values: "No presence of keratin pearls seen.",
+        image: intensityImage,
+        class: "Normal",
+      },
     ];
-
+  
+    const resultsPage = (
+      <Page key={features.length} style={styles.body}>
+        <Text style={styles.header} fixed>
+          HISTOGRADE REPORT
+        </Text>
+        <Image style={styles.image} src={logo} />
+        <Text style={styles.title}>Observation Results</Text>
+  
+        <View style={styles.tableContainer}>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableHeader}>Feature</Text>
+            <Text style={styles.tableHeader}>Result</Text>
+          </View>
+          {features.map((feature, index) => (
+            <View style={styles.tableRow} key={index}>
+              <Text style={styles.tableData}>{feature.title}</Text>
+              <Text style={styles.tableData}>{feature.values}</Text>
+            </View>
+          ))}
+        </View>
+  
+        <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) =>
+            `${pageNumber} / ${totalPages}`
+          }
+          fixed
+        />
+      </Page>
+    );
+  
     const pages = features.map((feature, index) => (
       <Page key={index} style={styles.body}>
         <Text style={styles.header} fixed>
@@ -184,18 +240,18 @@ function Result() {
         <Image style={styles.image} src={logo} />
         <Text style={styles.title}>Oral Pre-Cancer Grading</Text>
         <Text style={styles.author}>Overall Test</Text>
-
+  
         <Text style={styles.subtitle} className="font-extrabold">
           {feature.title}
         </Text>
         <Text style={styles.text}>{feature.theory}</Text>
-
+  
         <Image style={styles.orgImg} src={feature.image} />
-
+  
         <Text style={styles.text}>
           <Text className="font-bold">RESULT</Text>
         </Text>
-
+  
         <Text style={styles.text}>
           Total: {feature.values}
         </Text>
@@ -211,9 +267,9 @@ function Result() {
         />
       </Page>
     ));
-
-    return <Document>{pages}</Document>;
-  };
+  
+    return <Document>{[...pages, resultsPage]}</Document>;
+  };  
 
   return (
     <div className="container p-8 mx-auto">
@@ -316,6 +372,33 @@ const styles = StyleSheet.create({
     fontFamily: "Times-Roman",
     color: "#FF4500",
     fontStyle: "bold",
+  },
+  tableContainer: {
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+  tableRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderColor: "#000",
+  },
+  tableHeader: {
+    fontSize: 20,
+    flex: 1,
+    padding: 5,
+    fontWeight: "bold",
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "#000",
+  },
+  tableData: {
+    fontSize: 15,
+    flex: 1,
+    padding: 5,
+    textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "#000",
   },
 });
 
