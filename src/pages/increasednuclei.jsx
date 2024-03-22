@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 function IncreasedNuclei() {
     const [imageFile, setImageFile] = useState(null);
-    const [, setResponse] = useState({});
     const [nuclei, setNuclei] = useState(null);
     const [error, setError] = useState(null);
 
@@ -20,30 +19,22 @@ function IncreasedNuclei() {
             const formData = new FormData();
             formData.append('image', imageFile);
 
-            const res = await fetch('http://localhost:5000/api/increased_nucleoli', {
+            const res = await fetch('http://localhost:5000/api/increasednucleoli', {
                 method: 'POST',
                 body: formData,
             });
-
-            if (!res.ok) {
-                throw new Error('Failed to analyze nucleoli');
-            }
-
             const data = await res.json();
-            setResponse(data);
-            setNuclei(data.increased_nucleoli);
-            setError(null); // Clear any previous error
+            setNuclei(data.cellsWithMultipleNuclei);
         } catch (error) {
             console.error('Error analyzing nucleoli:', error);
-            setError('Failed to analyze nucleoli. Please try again.');
-            setNuclei(null); // Reset nuclei count on error
+            setError(error.message);
         }
     };
 
     return (
         <div>
-            <div className="container mx-auto p-8">
-                <h1 className="my-10 text-3xl font-bold text-gray-700 text-center">Increased Number of Nucleoli</h1>
+            <div className="container p-8 mx-auto">
+                <h1 className="my-10 text-3xl font-bold text-center text-gray-700">Increased Number of Nucleoli</h1>
                 <form onSubmit={handleSubmit} className="mb-6"> 
                     <div className="items-center justify-center max-w-xl mx-auto">
                         <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none" id="drop">
@@ -58,13 +49,13 @@ function IncreasedNuclei() {
                     </div>
                     <button
                         type="submit"
-                        className="w-1/5 justify-center mx-auto flex mt-4 bg-pink-500 text-white px-4 py-2 rounded hover:bg-purple-300 focus:outline-none focus:shadow-outline-blue"
+                        className="flex justify-center w-1/5 px-4 py-2 mx-auto mt-4 text-white bg-pink-500 rounded hover:bg-purple-300 focus:outline-none focus:shadow-outline-blue"
                     >
                         Submit
                     </button>
                 </form>
 
-                {nuclei && (
+                {nuclei !== null && (
                     <div className="flex flex-col items-center justify-center">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
                             <div>
@@ -76,10 +67,11 @@ function IncreasedNuclei() {
                 )}
 
                 {error && (
-                    <div className="text-red-600 mt-4">{error}</div>
+                    <div className="mt-4 text-red-600">{error}</div>
                 )}
             </div>
         </div>
     );
 }
+
 export default IncreasedNuclei;

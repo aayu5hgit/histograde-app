@@ -10,6 +10,8 @@ import KeratinPearls from './pages/keratinpearls.jsx';
 import Mitosis from './pages/mitosis.jsx';
 import Result from './pages/result.jsx';
 import IncreasedNuclei from './pages/increasednuclei.jsx'
+import CellSizeDesc from './pages/cellsizedesc.jsx'
+import NucleusSizeDesc from './pages/nucleussizedesc.jsx'
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/mitosis" element={<Mitosis/>} />
         <Route path="/increasednuclei" element={<IncreasedNuclei/>} />
         <Route path="/result" element={<Result/>} />
+        <Route path="/cellsizedesc" element={<CellSizeDesc/>} />
+        <Route path="/nucleussizedesc" element={<NucleusSizeDesc/>} />
 
         </Routes>
     </Router>

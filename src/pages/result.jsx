@@ -36,7 +36,8 @@ function Result() {
   const [intensityBottom, setIntensityBottom] = useState("");
   const [intensityClass, setIntensityClass] = useState("");
   const [ncratio, setNcratio] = useState("");
-  
+  const [increasedNucleoli, setIncreasedNucleoli] = useState("");
+  const [increasedNucleoliImage, setIncreasedNucleoliImage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,6 +68,20 @@ function Result() {
       setAverageTop(nucleusSizeData.averageTop);
       setAverageMiddle(nucleusSizeData.averageMiddle);
       setAverageBottom(nucleusSizeData.averageBottom);
+
+      //Increased nucleoli API
+      const increasedNucleiResponse = await fetch(
+        "http://localhost:5000/api/increasednucleoli",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const increasedNucleiData = await increasedNucleiResponse.json();
+
+      // Set state with nucleus size data
+      setIncreasedNucleoliImage();
+      setIncreasedNucleoli(increasedNucleiData.totalcellsWithMultipleNucleiNuclei);
 
       // Cellular Size API
       const cellularSizeResponse = await fetch(
@@ -147,6 +162,15 @@ function Result() {
           "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
         result: "",
         values: ncratio,
+        image: intensityImage,
+        class: intensityClass,
+      },
+      {
+        title: "Incresed Number of Nucleoli",
+        theory:
+          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+        result: "",
+        values: increasedNucleoli,
         image: intensityImage,
         class: intensityClass,
       },
