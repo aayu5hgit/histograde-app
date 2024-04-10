@@ -47,6 +47,11 @@ function Result() {
     return Math.floor(Math.random() * (48 - 15 + 1)) + 15;
   };
 
+  const generateID = () => {
+    // Generate a random number for the report ID
+    return Math.floor(100000 + Math.random() * 900000);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -90,39 +95,38 @@ function Result() {
       setMainClass(modeldata.class);
 
 //ncratio api
-      // const ncres = await fetch(
-      //   "http://localhost:5000/api/ncratio",
-      //   {
-      //     method: "POST",
-      //     body: formData,
-      //   }
-      // );
-      // const ncdata = await ncres.json();
-      // setNCRatio(ncdata.overall_average_ratio);
+      const ncres = await fetch(
+        "http://localhost:5000/api/ncratio",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const ncdata = await ncres.json();
+      setNCRatio(ncdata.overall_average_ratio);
 
-// mitosis api
-      // const mitosisres = await fetch(
-      //   "http://localhost:5000/api/mitosis",
-      //   {
-      //     method: "POST",
-      //     body: formData,
-      //   }
-      // );
-      // const mitosisdata = await mitosisres.json();
-      // setMitosisClass(mitosisdata.mitotic_figure_grade);
-      // setMitosisImage(mitosisdata.result_image);
+//mitosis api
+      const mitosisres = await fetch(
+        "http://localhost:5000/api/mitosis",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const mitosisdata = await mitosisres.json();
+      setMitosisClass(mitosisdata.mitotic_figure_grade);
 
-      // keratin api
-      // const keratinres = await fetch(
-      //   "http://localhost:5000/api/keratin",
-      //   {
-      //     method: "POST",
-      //     body: formData,
-      //   }
-      // );
-      // const keratindata = await keratinres.json();
-      // setKeratinClass(keratindata.Keratin_Pearls_grade);
-      // setMitosisImage(mitosisdata.result_image);
+     // keratin api
+      const keratinres = await fetch(
+        "http://localhost:5000/api/keratin",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const keratindata = await keratinres.json();
+      setKeratinClass(keratindata.Keratin_Pearls_grade);
+      setMitosisImage(mitosisdata.result_image);
 
       //Increased nucleoli API
       const increasedNucleiResponse = await fetch(
@@ -158,28 +162,28 @@ function Result() {
       setCellClass(cellularSizeData.classificationResult);
 
       // Update result image
-      setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
+      // setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
       
-      // // Cellular Hyperch API
-      // const hyperchromasiaResponse = await fetch(
-      //   "http://localhost:5000/api/hyperchromasia",
-      //   {
-      //     method: "POST",
-      //     body: formData,
-      //   }
-      // );
-      // const hyperchromasiaData = await hyperchromasiaResponse.json();
+      // Cellular Hyperch API
+      const hyperchromasiaResponse = await fetch(
+        "http://localhost:5000/api/hyperchromasia",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const hyperchromasiaData = await hyperchromasiaResponse.json();
 
-      // // Set state with cellular size data
-      // setIntensityImage(hyperchromasiaData.original_image);
-      // setIntensityImageRes(hyperchromasiaData.result_image);
-      // setIntensity(hyperchromasiaData.overall_average_intensity);
-      // setIntensityTop(hyperchromasiaData.average_intensity_top_section);
-      // setIntensityMiddle(hyperchromasiaData.average_intensity_middle_section);
-      // setIntensityBottom(hyperchromasiaData.average_intensity_bottom_section);
-      // setIntensityClass(hyperchromasiaData.classification);
+      // Set state with cellular size data
+      setIntensityImage(`data:image/jpg;base64,${cellularSizeData.originalImage}`);
+      setIntensityImageRes(hyperchromasiaData.result_image);
+      setIntensity(hyperchromasiaData.overall_average_intensity);
+      setIntensityTop(hyperchromasiaData.average_intensity_top_section);
+      setIntensityMiddle(hyperchromasiaData.average_intensity_middle_section);
+      setIntensityBottom(hyperchromasiaData.average_intensity_bottom_section);
+      setIntensityClass(hyperchromasiaData.classification);
 
-      // Update result image
+      // // Update result image
       setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
       const numericTotalNucleiSize = parseFloat(totalNucleiSize);
       const numericTotalCellSize = parseFloat(totalCellSize);
@@ -194,6 +198,7 @@ function Result() {
 
   const generatePDF = () => {
     const randomNumber = generateRandomNumber();
+    const reportID = generateID();
     const features = [
       {
         title: "Abnormal Variation in Nucleus Size",
@@ -213,74 +218,75 @@ function Result() {
         image: cellImage,
         class: cellClass,
       }, 
-      // {
-      //   title: "Hyperchromasia (Intensity)",
-      //   theory:
-      //     "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
-      //   result: "",
-      //   values: intensityImageRes,
-      //   image: intensityImage,
-      //   class: intensityClass,
-      // },
+      {
+        title: "Hyperchromasia (Intensity)",
+        theory:
+          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+        result: "",
+        values: intensity,
+        image: intensityImage,
+        class: intensityClass,
+      },
       {
         title: "Incresed Number of Nucleoli",
         theory:
           "An increased number of nucleoli in oral histopathological cells occurs when a single cell contains multiple distinct nuclei. It typically indicates increased cellular activity and proliferation. ",
-        result: "",
-        values: randomNumber,
+        result: ".",
+        values: "-",
         image: intensityImage,
         class: intensityClass,
       },
-      // {
-      //   title: "Mitotic Figures",
-      //   theory:
-      //     "Abnormal mitotic figures, including atypical mitosis, in oral histopathological cells are indicative of disturbed cellular division processes. Mitosis is the process by which a cell divides to produce two identical daughter cells. Abnormalities in mitosis can be seen in various pathological conditions, including cancer.",
-      //   result: "",
-      //   values: "No presence of mitotic figures seen.",
-      //   image: mitosisImage,
-      //   class: mitosisClass,
-      // },
-      // {
-      //   title: "Keratin Pearls",
-      //   theory:
-      //     "Keratin pearls and premature keratinization in oral histopathological cells are characteristic features often observed in various oral lesions, particularly in squamous cell carcinomas.Keratin pearls are concentrically arranged masses of keratinized cells found within the tumor tissue.",
-      //   result: "",
-      //   values: "No presence of keratin pearls seen.",
-      //   image: intensityImage,
-      //   class: keratinClass,
-      // },
-      // {
-      //   title: "N:C Ratio",
-      //   theory:
-      //     "Nucleus to cytoplasm ratio is the increase in the nuclear size leading to reduction of the cytoplasmic area normal for the epithelial location. In oral histopathology, this ratio refers to the relative size of the nucleus compared to the cytoplasm within cells observed under a microscope.",
-      //   result: "",
-      //   values: NCRatio,
-      //   image: intensityImage,
-      //   class: mainClass,
-      // },
+      {
+        title: "Mitotic Figures",
+        theory:
+          "Abnormal mitotic figures, including atypical mitosis, in oral histopathological cells are indicative of disturbed cellular division processes. Mitosis is the process by which a cell divides to produce two identical daughter cells. Abnormalities in mitosis can be seen in various pathological conditions, including cancer.",
+        result: "",
+        values: "No presence of mitotic figures seen.",
+        image: intensityImage,
+        class: mitosisClass,
+      },
+      {
+        title: "Keratin Pearls",
+        theory:
+          "Keratin pearls and premature keratinization in oral histopathological cells are characteristic features often observed in various oral lesions, particularly in squamous cell carcinomas.Keratin pearls are concentrically arranged masses of keratinized cells found within the tumor tissue.",
+        result: "",
+        values: "No presence of keratin pearls seen.",
+        image: intensityImage,
+        class: keratinClass,
+      },
+      {
+        title: "N:C Ratio",
+        theory:
+          "Nucleus to cytoplasm ratio is the increase in the nuclear size leading to reduction of the cytoplasmic area normal for the epithelial location. In oral histopathology, this ratio refers to the relative size of the nucleus compared to the cytoplasm within cells observed under a microscope.",
+        result: "",
+        values: NCRatio,
+        image: intensityImage,
+        class: mainClass,
+      },
       {
         title: "Irregular Stratification",
         theory:
           "The oral mucosa typically consists of stratified squamous epithelium, which is composed of layers of cells arranged in a specific pattern: basal cells at the bottom, followed by layers of increasingly flattened cells towards the surface. Disturbance of the stratified layers of the epithelium, with haphazardly organised and difficult to distinguish layers.  ",
-        result: "",
-        values: "",
+        result: ".",
+        values: 0,
         image: cellImage,
         class: mainClass,
       },
     ];
   
     const resultsPage = (
-      <Page key={features.length} style={styles.body}>
+      <Page key="results" style={styles.body}>
         <Text style={styles.header} fixed>
           HISTOGRADE REPORT
         </Text>
         <Image style={styles.image} src={logo} />
         <Text style={styles.title}>Observation Results</Text>
   
+        {/* Render feature table */}
         <View style={styles.tableContainer}>
           <View style={styles.tableRow}>
             <Text style={styles.tableHeader}>Feature</Text>
-            <Text style={styles.tableHeader}>Result</Text>
+            <Text style={styles.tableHeader}>Observations</Text>
             <Text style={styles.tableHeader}>Class</Text>
           </View>
           {features.map((feature, index) => (
@@ -292,53 +298,54 @@ function Result() {
           ))}
         </View>
   
-        <Text
-          style={styles.pageNumber}
-          render={({ pageNumber, totalPages }) =>
-            `${pageNumber} / ${totalPages}`
-          }
-          fixed
+        {/* Footer with report ID */}
+        <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) =>
+          `${pageNumber} / ${totalPages} | Report ID: ${reportID}`} fixed
         />
       </Page>
     );
   
-    const pages = features.map((feature, index) => (
-      <Page key={index} style={styles.body}>
-        <Text style={styles.header} fixed>
-          HISTOGRADE REPORT
-        </Text>
-        <Image style={styles.image} src={logo} />
-        <Text style={styles.title}>Oral Pre-Cancer Grading</Text>
-        <Text style={styles.author}>Overall Test</Text>
-  
-        <Text style={styles.subtitle} className="font-extrabold">
-          {feature.title}
-        </Text>
-        <Text style={styles.text}>{feature.theory}</Text>
-  
-        <Image style={styles.orgImg} src={feature.image} />
-  
-        <Text style={styles.text}>
-          <Text className="font-bold">RESULT</Text>
-        </Text>
-  
-        <Text style={styles.text}>
-          Total: {feature.values}
-        </Text>
-        <Text style={styles.categoryText}>
-          Detected Category: {feature.class}
-        </Text>
-        <Text
-          style={styles.pageNumber}
-          render={({ pageNumber, totalPages }) =>
-            `${pageNumber} / ${totalPages}`
-          }
-          fixed
-        />
-      </Page>
-
-      
-    ));
+    const pages = features.map((feature, index) => {
+      const values = feature.values || "-"; // If feature.values is falsy, assign 0
+      const category = feature.class ?? "Normal"; // If feature.class is null or undefined, assign 0
+    
+      return (
+        <Page key={index} style={styles.body}>
+          <Text style={styles.header} fixed>
+            HISTOGRADE REPORT
+          </Text>
+          <Image style={styles.image} src={logo} />
+          <Text style={styles.title}>Oral Pre-Cancer Grading</Text>
+          <Text style={styles.author}>Overall Test</Text>
+    
+          <Text style={styles.subtitle} className="font-extrabold">
+            {feature.title}
+          </Text>
+          <Text style={styles.text}>{feature.theory}</Text>
+    
+          <Image style={styles.orgImg} src={feature.image} />
+    
+          <Text style={styles.text}>
+            <Text className="font-bold">RESULT</Text>
+          </Text>
+    
+          <Text style={styles.text}>
+            Total: {values}
+          </Text>
+          <Text style={styles.categoryText}>
+            Detected Category: {category}
+          </Text>
+          <Text
+            style={styles.pageNumber}
+            render={({ pageNumber, totalPages }) =>
+              `${pageNumber} / ${totalPages}`
+            }
+            fixed
+          />
+        </Page>
+      );
+    });
+    
     return <Document>{[pages, resultsPage]}</Document>;
           
   };  
