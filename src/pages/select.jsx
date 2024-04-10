@@ -84,6 +84,21 @@ function Select() {
             "price": "Test",
             "info": "/increasednucleidesc",
             "link": "/increasednuclei",
+        }, 
+        {
+            "name": "N:C Ratio",
+            "description": "Learn about increased number of nucleoli and their diagnostic significance.",
+            "imageUrl": "https://img.freepik.com/free-photo/violet-bubbles-fluid-acrylic-pour-painting_23-2148315548.jpg?size=626&ext=jpg&ga=GA1.1.1379558139.1705562006&semt=ais",
+            "price": "Test",
+            "info": "/ncratiodesc",
+            "link": "/ncratio",
+        }, {
+            "name": "Irregular Stratification",
+            "description": "Learn about increased number of nucleoli and their diagnostic significance.",
+            "imageUrl": "https://img.freepik.com/free-photo/beautiful-fertility-concept-3d-rendering_23-2149230687.jpg?size=626&ext=jpg&ga=GA1.1.1379558139.1705562006&semt=ais",
+            "price": "Test",
+            "info": "/ncratiodesc",
+            "link": "/irreg",
         },  
     ];
 

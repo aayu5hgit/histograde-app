@@ -9,9 +9,6 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import logo from "../assets/logo.png";
-import Light from "../assets/fonts/Light.ttf";
-import oimg from "../assets/m1.jpeg"; // Placeholder for original image
-import rimg from "../assets/m1r1.JPEG"; // Placeholder for result image
 
 function Result() {
   const [imageFile, setImageFile] = useState(null);
@@ -39,6 +36,11 @@ function Result() {
   const [ncratio, setNcratio] = useState("");
   const [increasedNucleoli, setIncreasedNucleoli] = useState("");
   const [increasedNucleoliImage, setIncreasedNucleoliImage] = useState("");
+  const [mainClass, setMainClass] = useState("");
+  const [NCRatio, setNCRatio] = useState("");
+  const [mitosisClass, setMitosisClass] = useState("");
+  const [mitosisImage, setMitosisImage] = useState("");
+  const [keratinClass, setKeratinClass] = useState("");
 
 
   const generateRandomNumber = () => {
@@ -74,6 +76,53 @@ function Result() {
       setAverageTop(nucleusSizeData.averageTop);
       setAverageMiddle(nucleusSizeData.averageMiddle);
       setAverageBottom(nucleusSizeData.averageBottom);
+      
+      
+      // MODel api
+      const modelres = await fetch(
+        "http://localhost:5000/api/model",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const modeldata = await modelres.json();
+      setMainClass(modeldata.class);
+
+//ncratio api
+      // const ncres = await fetch(
+      //   "http://localhost:5000/api/ncratio",
+      //   {
+      //     method: "POST",
+      //     body: formData,
+      //   }
+      // );
+      // const ncdata = await ncres.json();
+      // setNCRatio(ncdata.overall_average_ratio);
+
+// mitosis api
+      // const mitosisres = await fetch(
+      //   "http://localhost:5000/api/mitosis",
+      //   {
+      //     method: "POST",
+      //     body: formData,
+      //   }
+      // );
+      // const mitosisdata = await mitosisres.json();
+      // setMitosisClass(mitosisdata.mitotic_figure_grade);
+      // setMitosisImage(mitosisdata.result_image);
+
+      // keratin api
+      // const keratinres = await fetch(
+      //   "http://localhost:5000/api/keratin",
+      //   {
+      //     method: "POST",
+      //     body: formData,
+      //   }
+      // );
+      // const keratindata = await keratinres.json();
+      // setKeratinClass(keratindata.Keratin_Pearls_grade);
+      // setMitosisImage(mitosisdata.result_image);
 
       //Increased nucleoli API
       const increasedNucleiResponse = await fetch(
@@ -111,24 +160,24 @@ function Result() {
       // Update result image
       setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
       
-      // Cellular Hyperch API
-      const hyperchromasiaResponse = await fetch(
-        "http://localhost:5000/api/hyperchromasia",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const hyperchromasiaData = await hyperchromasiaResponse.json();
+      // // Cellular Hyperch API
+      // const hyperchromasiaResponse = await fetch(
+      //   "http://localhost:5000/api/hyperchromasia",
+      //   {
+      //     method: "POST",
+      //     body: formData,
+      //   }
+      // );
+      // const hyperchromasiaData = await hyperchromasiaResponse.json();
 
-      // Set state with cellular size data
-      setIntensityImage(hyperchromasiaData.original_image);
-      setIntensityImageRes(hyperchromasiaData.result_image);
-      setIntensity(hyperchromasiaData.overall_average_intensity);
-      setIntensityTop(hyperchromasiaData.average_intensity_top_section);
-      setIntensityMiddle(hyperchromasiaData.average_intensity_middle_section);
-      setIntensityBottom(hyperchromasiaData.average_intensity_bottom_section);
-      setIntensityClass(hyperchromasiaData.classification);
+      // // Set state with cellular size data
+      // setIntensityImage(hyperchromasiaData.original_image);
+      // setIntensityImageRes(hyperchromasiaData.result_image);
+      // setIntensity(hyperchromasiaData.overall_average_intensity);
+      // setIntensityTop(hyperchromasiaData.average_intensity_top_section);
+      // setIntensityMiddle(hyperchromasiaData.average_intensity_middle_section);
+      // setIntensityBottom(hyperchromasiaData.average_intensity_bottom_section);
+      // setIntensityClass(hyperchromasiaData.classification);
 
       // Update result image
       setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
@@ -164,40 +213,59 @@ function Result() {
         image: cellImage,
         class: cellClass,
       }, 
-      {
-        title: "Hyperchromasia (Intensity)",
-        theory:
-          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
-        result: "",
-        values: intensityImageRes,
-        image: intensityImage,
-        class: intensityClass,
-      },
+      // {
+      //   title: "Hyperchromasia (Intensity)",
+      //   theory:
+      //     "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+      //   result: "",
+      //   values: intensityImageRes,
+      //   image: intensityImage,
+      //   class: intensityClass,
+      // },
       {
         title: "Incresed Number of Nucleoli",
         theory:
-          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+          "An increased number of nucleoli in oral histopathological cells occurs when a single cell contains multiple distinct nuclei. It typically indicates increased cellular activity and proliferation. ",
         result: "",
         values: randomNumber,
         image: intensityImage,
         class: intensityClass,
       },
+      // {
+      //   title: "Mitotic Figures",
+      //   theory:
+      //     "Abnormal mitotic figures, including atypical mitosis, in oral histopathological cells are indicative of disturbed cellular division processes. Mitosis is the process by which a cell divides to produce two identical daughter cells. Abnormalities in mitosis can be seen in various pathological conditions, including cancer.",
+      //   result: "",
+      //   values: "No presence of mitotic figures seen.",
+      //   image: mitosisImage,
+      //   class: mitosisClass,
+      // },
+      // {
+      //   title: "Keratin Pearls",
+      //   theory:
+      //     "Keratin pearls and premature keratinization in oral histopathological cells are characteristic features often observed in various oral lesions, particularly in squamous cell carcinomas.Keratin pearls are concentrically arranged masses of keratinized cells found within the tumor tissue.",
+      //   result: "",
+      //   values: "No presence of keratin pearls seen.",
+      //   image: intensityImage,
+      //   class: keratinClass,
+      // },
+      // {
+      //   title: "N:C Ratio",
+      //   theory:
+      //     "Nucleus to cytoplasm ratio is the increase in the nuclear size leading to reduction of the cytoplasmic area normal for the epithelial location. In oral histopathology, this ratio refers to the relative size of the nucleus compared to the cytoplasm within cells observed under a microscope.",
+      //   result: "",
+      //   values: NCRatio,
+      //   image: intensityImage,
+      //   class: mainClass,
+      // },
       {
-        title: "Mitotic Figures",
+        title: "Irregular Stratification",
         theory:
-          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
+          "The oral mucosa typically consists of stratified squamous epithelium, which is composed of layers of cells arranged in a specific pattern: basal cells at the bottom, followed by layers of increasingly flattened cells towards the surface. Disturbance of the stratified layers of the epithelium, with haphazardly organised and difficult to distinguish layers.  ",
         result: "",
-        values: "No presence of mitotic figures seen.",
-        image: intensityImage,
-        class: "Normal",
-      },{
-        title: "Keratin Pearls",
-        theory:
-          "Hyperchromasia refers to an abnormal increase in the staining intensity of cell nuclei observed under microscopic examination, typically in histological images. This phenomenon is commonly associated with various pathological conditions, including dysplasia, inflammation, and malignancy.",
-        result: "",
-        values: "No presence of keratin pearls seen.",
-        image: intensityImage,
-        class: "Normal",
+        values: "",
+        image: cellImage,
+        class: mainClass,
       },
     ];
   
@@ -213,11 +281,13 @@ function Result() {
           <View style={styles.tableRow}>
             <Text style={styles.tableHeader}>Feature</Text>
             <Text style={styles.tableHeader}>Result</Text>
+            <Text style={styles.tableHeader}>Class</Text>
           </View>
           {features.map((feature, index) => (
             <View style={styles.tableRow} key={index}>
               <Text style={styles.tableData}>{feature.title}</Text>
               <Text style={styles.tableData}>{feature.values}</Text>
+              <Text style={styles.tableData}>{feature.class}</Text>
             </View>
           ))}
         </View>
@@ -266,9 +336,11 @@ function Result() {
           fixed
         />
       </Page>
+
+      
     ));
-  
-    return <Document>{[...pages, resultsPage]}</Document>;
+    return <Document>{[pages, resultsPage]}</Document>;
+          
   };  
 
   return (
@@ -287,20 +359,24 @@ function Result() {
         </div>
       </form>
 
-      {resultImage && (
         <div className="flex items-center justify-center">
-          <PDFDownloadLink
-            document={generatePDF()}
-            fileName="Histograde-Report.pdf"
-          >
-            {({ blob, url, loading, error }) => (
-              <button className="flex p-5 mt-4 font-semibold text-white bg-pink-500 rounded hover:bg-purple-300 focus:outline-none focus:shadow-outline-blue">
-                {loading ? "Generating PDF..." : "Download PDF Report"}
-              </button>
-            )}
-          </PDFDownloadLink>
+        <PDFDownloadLink
+          document={generatePDF()}
+          fileName="Histograde-Report.pdf"
+          style={{
+            textDecoration: "none",
+          }}
+        >
+          {({ blob, url, loading, error }) => (
+            <button
+              className="flex p-5 mt-4 font-semibold text-white bg-pink-500 rounded hover:bg-purple-300 focus:outline-none focus:shadow-outline-blue"
+              disabled={loading}
+            >
+              {loading ? "Generating PDF..." : "Download PDF Report"}
+            </button>
+          )}
+        </PDFDownloadLink>
         </div>
-      )}
     </div>
   );
 }

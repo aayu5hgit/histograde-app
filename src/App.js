@@ -12,6 +12,8 @@ import Result from './pages/result.jsx';
 import IncreasedNuclei from './pages/increasednuclei.jsx'
 import CellSizeDesc from './pages/cellsizedesc.jsx'
 import NucleusSizeDesc from './pages/nucleussizedesc.jsx'
+import NCRatio from './pages/ncratio.jsx';
+import IrregStrat from './pages/irreg.jsx';
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
         <Route path="/result" element={<Result/>} />
         <Route path="/cellsizedesc" element={<CellSizeDesc/>} />
         <Route path="/nucleussizedesc" element={<NucleusSizeDesc/>} />
+        <Route path="/ncratio" element={<NCRatio/>} />
+        <Route path="/irreg" element={<IrregStrat/>} />
 
         </Routes>
     </Router>

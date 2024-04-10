@@ -1,6 +1,8 @@
 import React from 'react';
 import cell from '../assets/cellimg.jpg'
 import logo from '../assets/logo.png'
+import vesit from "../assets/veslogo.png"
+import gdc from "../assets/gdclogo.png"
 
 const Home = () => {
   return (
@@ -31,9 +33,11 @@ const Home = () => {
     <header class="absolute inset-x-0 top-0 z-10 w-full">
         <div class="px-4 mx-auto sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
-                <div class="flex-shrink-0">
+                <div class="flex">
                     <a href="#" title="" class="flex">
-                        <img class="w-10" src={logo} alt="" />
+                        <img class="w-10" src={vesit} alt="" /> &nbsp;&nbsp;&nbsp; X &nbsp;&nbsp;&nbsp;
+                    </a> <a href="#" title="" class="flex">
+                        <img class="w-10" src={gdc} alt="" />
                     </a>
                 </div>
 
@@ -49,7 +53,7 @@ const Home = () => {
         </div>
     </header>
 
-    <section class="bg-gray-200 overflow-hidden">
+    <section class="bg-gray-200 overflow-hidden min-h-screen">
         <div class="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[800px]">
             <div class="relative flex items-center justify-center w-full lg:order-2 lg:w-7/12">
                 <div class="absolute bottom-0 right-0 hidden lg:block">
@@ -72,8 +76,13 @@ const Home = () => {
                                    
                                 </button>
                    </div>
-                    
-                    <p class="mt-5 text-gray-500 font-semibold">Instant results. No waiting time</p>
+                    <div className="px-4 py-2 my-4 text-sm transition duration-300 ease-in-out border rounded-lg border-white-700 dark:border-gray-300 text-white-400 dark:text-gray-300 hover:text-gray-500 dark:hover:text-gray-400 md:text-xl text-start">
+          <ul className="mt-2 text-gray-500 list-disc list-inside">
+            <li className="mb-2">Experience the future of histopathology.</li>
+            <li className="mb-2">Our intelligent system streamlines every aspect.</li>
+            <li className="mb-2">Instant results. No waiting time</li>
+          </ul>
+        </div>
                 </div>
             </div>
 
