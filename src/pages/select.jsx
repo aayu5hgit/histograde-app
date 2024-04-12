@@ -105,15 +105,13 @@ function Select() {
     return (
         <div>
         <div className="p-10 text-center">
-            <h1 className="mb-4 text-4xl font-bold">Choose A Feature</h1>
-            <h1 className="text-xl">To Test</h1>
+            <h1 className="mb-4 text-4xl font-bold">Features</h1>
         </div>
-        <div className="w-1/2 p-3 mx-auto duration-500 bg-gray-100 shadow-md rounded-xl hover:shadow-xl hover:cursor-pointer">
-                <div className="w-1/2 p-3">
+        <div className="w-[80%] px-6 py-2 my-3 text-xl font-semibold text-black bg-purple-300 rounded-md cursor-auto hover:cursor-pointer hover:bg-pink-500">
+                <div className=" p-3">
                     <span className="mr-3 text-xs text-gray-400 uppercase">New Feature</span>
                     <p className="block text-4xl font-bold text-black capitalize">Take Overall Test</p>
                     <div className="flex items-center">
-                        {/* Use Link from react-router-dom to navigate to processing page */}
                         <Link to='/result' className="px-6 py-2 my-3 text-xl font-semibold text-black bg-purple-300 rounded-md cursor-auto hover:cursor-pointer hover:bg-pink-500">
                            Go
                         </Link>

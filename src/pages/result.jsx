@@ -199,6 +199,7 @@ function Result() {
   const generatePDF = () => {
     const randomNumber = generateRandomNumber();
     const reportID = generateID();
+
     const features = [
       {
         title: "Abnormal Variation in Nucleus Size",
@@ -266,15 +267,25 @@ function Result() {
       {
         title: "Irregular Stratification",
         theory:
-          "The oral mucosa typically consists of stratified squamous epithelium, which is composed of layers of cells arranged in a specific pattern: basal cells at the bottom, followed by layers of increasingly flattened cells towards the surface. Disturbance of the stratified layers of the epithelium, with haphazardly organised and difficult to distinguish layers.  ",
+          "The oral mucosa typically consists of stratified squamous epithelium, which is composed of layers of cells arranged in a specific pattern: basal cells at the bottom, followed by layers of increasingly flattened cells towards the surface. Disturbance of the stratified layers of the epithelium, with haphazardly organised and difficult to distinguish layers.",
         result: ".",
         values: 0,
         image: cellImage,
         class: mainClass,
       },
     ];
-  
+    const allClasses = features.map((feature) => feature.class);
+    // Count occurrences of each class
+    const classCount = allClasses.reduce((acc, curr) => {
+      acc[curr] = (acc[curr] || 0) + 1;
+      return acc;
+    }, {});
+    // Find the class with the maximum occurrences
+    const finalGrade = Object.keys(classCount).reduce((a, b) =>
+    classCount[a] > classCount[b] ? a : b
+  );
     const resultsPage = (
+
       <Page key="results" style={styles.body}>
         <Text style={styles.header} fixed>
           HISTOGRADE REPORT
@@ -296,6 +307,11 @@ function Result() {
               <Text style={styles.tableData}>{feature.class}</Text>
             </View>
           ))}
+                <Text style={styles.text}>
+        <Text className="font-bold">Final Grade Observed: </Text>
+        {finalGrade}
+      </Text>
+
         </View>
   
         {/* Footer with report ID */}
@@ -332,9 +348,10 @@ function Result() {
           <Text style={styles.text}>
             Total: {values}
           </Text>
-          <Text style={styles.categoryText}>
+          <Text style={styles.text}>
             Detected Category: {category}
           </Text>
+
           <Text
             style={styles.pageNumber}
             render={({ pageNumber, totalPages }) =>

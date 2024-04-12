@@ -14,6 +14,7 @@ import CellSizeDesc from './pages/cellsizedesc.jsx'
 import NucleusSizeDesc from './pages/nucleussizedesc.jsx'
 import NCRatio from './pages/ncratio.jsx';
 import IrregStrat from './pages/irreg.jsx';
+import Features from './pages/features.jsx';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/nucleussizedesc" element={<NucleusSizeDesc/>} />
         <Route path="/ncratio" element={<NCRatio/>} />
         <Route path="/irreg" element={<IrregStrat/>} />
+        <Route path="/features" element={<Features/>} />
 
         </Routes>
     </Router>
