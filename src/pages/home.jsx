@@ -6,6 +6,7 @@ import vesit from "../assets/veslogo.png";
 import gdc from "../assets/gdclogo.png";
 import homebg from "../assets/homebg.png";
 import video from "../assets/videos/vid.mp4"
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -18,7 +19,7 @@ const Home = () => {
           <div class="mx-auto max-w-7xl  lg:px-8">
             <div class="w-full flex flex-col lg:flex-row">
               <div class="flex justify-between lg:hidden px-4">
-                <a href="/" class="flex items-center">
+                <a href="/" class="flex items-center w-14">
 
                   <img src={logo} />
                 </a>
@@ -46,41 +47,32 @@ const Home = () => {
                 </button>
               </div>
               <div
-                class="hidden w-full lg:flex justify-between max-lg:bg-white py-5 max-lg:mt-1 max-lg:px-4 max-lg:shadow-lg max-lg:shadow-gray-200 max-lg:h-auto max-lg:overflow-auto transition-all duration-500 delay-200 "
+                class="hidden bg-pink-100/30 w-28 rounded-lg lg:flex justify-between max-lg:bg-white py-5 max-lg:mt-1 max-lg:px-4 max-lg:shadow-lg max-lg:shadow-gray-200 max-lg:overflow-auto transition-all duration-500 delay-200 "
                 id="navbar"
               >
-                <ul class="flex lg:items-center max-lg:gap-4 max-lg:mb-4 flex-col mt-4 lg:flex-1 md:mt-0 lg:flex-row">
-
-                  <li>
-                    <a href="javascript:;" class="flex items-center w-14">
+                    <Link to="/" class="flex mx-auto w-14 h-14">
                       <img src={logo} />
-                    </a>
-                  </li>
-
-                </ul>
-
-                <div class="flex lg:items-center justify-start flex-col lg:flex-row max-lg:gap-4 lg:flex-1 lg:justify-end">
-                  <button class="bg-indigo-600 text-white rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 py-3 px-6 text-sm lg:ml-5 hover:bg-indigo-700">
-                    Test a Feature
-                  </button>
-                </div>
+                    </Link>
               </div>
+        
             </div>
           </div>
         </nav>
         <section class="pt-8 lg:pt-32 bg-[url('https://pagedone.io/asset/uploads/1691055810.png')] bg-center bg-cover">
           <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
-          <a href="/" class="flex mx-auto w-44 my-4">
+          <Link to="/" class="flex mx-auto w-44 my-4 ">
 
 <img src={logos} />
-</a>
+</Link>
             <div class="border border-indigo-600 p-1 w-60 mx-auto rounded-full flex items-center justify-between mb-4">
               
               <span class="font-inter text-xs font-medium text-gray-900 ml-3">
+                <Link to ="#steps">
                 Explore how to use HistoGrade.
+                </Link>
               </span>
               <a
-                href="javascript:;"
+                href="/"
                 class="w-8 h-8 rounded-full flex justify-center items-center bg-indigo-600"
               >
                 <svg
@@ -204,7 +196,7 @@ const Home = () => {
           </div>
         </section>
 
-        <section class="bg-gray-50 py-12 sm:py-16 lg:py-20 xl:py-24">
+        <section class="bg-gray-50 py-12 sm:py-16 lg:py-20 xl:py-24" id="steps">
           <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="text-center">
               <p class="text-sm font-bold uppercase tracking-widest text-gray-700">How It Works</p>

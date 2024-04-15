@@ -54,13 +54,13 @@ function Result() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
 
     try {
       const formData = new FormData();
       const file = e.target.files[0];
       if (file) {
-      setImageFile(file);
+        setImageFile(file);
       }
       formData.append("image", e.target.files[0]);
 
@@ -81,8 +81,8 @@ function Result() {
       setAverageTop(nucleusSizeData.averageTop);
       setAverageMiddle(nucleusSizeData.averageMiddle);
       setAverageBottom(nucleusSizeData.averageBottom);
-      
-      
+
+
       // MODel api
       const modelres = await fetch(
         "http://localhost:5000/api/model",
@@ -94,7 +94,7 @@ function Result() {
       const modeldata = await modelres.json();
       setMainClass(modeldata.class);
 
-//ncratio api
+      //ncratio api
       const ncres = await fetch(
         "http://localhost:5000/api/ncratio",
         {
@@ -105,7 +105,7 @@ function Result() {
       const ncdata = await ncres.json();
       setNCRatio(ncdata.overall_average_ratio);
 
-//mitosis api
+      //mitosis api
       const mitosisres = await fetch(
         "http://localhost:5000/api/mitosis",
         {
@@ -116,7 +116,7 @@ function Result() {
       const mitosisdata = await mitosisres.json();
       setMitosisClass(mitosisdata.mitotic_figure_grade);
 
-     // keratin api
+      // keratin api
       const keratinres = await fetch(
         "http://localhost:5000/api/keratin",
         {
@@ -130,7 +130,7 @@ function Result() {
 
       //Increased nucleoli API
       const increasedNucleiResponse = await fetch(
-        "http://localhost:5000/api/increasednucleoli",
+        "http://localhost:5000/api/increasednucleoli-test",
         {
           method: "POST",
           body: formData,
@@ -139,8 +139,8 @@ function Result() {
       const increasedNucleiData = await increasedNucleiResponse.json();
 
       // Set state with nucleus size data
-      setIncreasedNucleoliImage();
-      setIncreasedNucleoli(increasedNucleiData.totalcellsWithMultipleNucleiNuclei);
+      setIncreasedNucleoliImage(`data:image/jpg;base64,${increasedNucleiData.result_image}`);
+      setIncreasedNucleoli(increasedNucleiData.nuclei_counts);
 
       // Cellular Size API
       const cellularSizeResponse = await fetch(
@@ -163,7 +163,7 @@ function Result() {
 
       // Update result image
       // setResultImage(`data:image/jpg;base64,${cellularSizeData.resultImage}`);
-      
+
       // Cellular Hyperch API
       const hyperchromasiaResponse = await fetch(
         "http://localhost:5000/api/hyperchromasia",
@@ -209,6 +209,7 @@ function Result() {
         values: totalNuclei,
         image: nucleiImage,
         class: cellClass,
+        final: (cellClass === 'Mild' || cellClass === 'Moderate' || cellClass === 'Severe') ? 'abnormal' : 'normal'
       },
       {
         title: "Abnormal Variation in Cellular Size",
@@ -218,7 +219,8 @@ function Result() {
         values: totalCell,
         image: cellImage,
         class: cellClass,
-      }, 
+        final: (cellClass === 'Mild' || cellClass === 'Moderate' || cellClass === 'Severe') ? 'abnormal' : 'normal'
+      },
       {
         title: "Hyperchromasia (Intensity)",
         theory:
@@ -227,15 +229,18 @@ function Result() {
         values: intensity,
         image: intensityImage,
         class: intensityClass,
+        final: (intensityClass === 'Mild' || intensityClass === 'Moderate' || intensityClass === 'Severe') ? 'abnormal' : 'normal'
       },
       {
         title: "Incresed Number of Nucleoli",
         theory:
           "An increased number of nucleoli in oral histopathological cells occurs when a single cell contains multiple distinct nuclei. It typically indicates increased cellular activity and proliferation. ",
         result: ".",
-        values: "-",
-        image: intensityImage,
+        values: increasedNucleoli,
+        image: increasedNucleoliImage,
         class: intensityClass,
+        final: (intensityClass === 'Mild' || intensityClass === 'Moderate' || intensityClass === 'Severe') ? 'abnormal' : 'normal'
+
       },
       {
         title: "Mitotic Figures",
@@ -245,6 +250,8 @@ function Result() {
         values: "No presence of mitotic figures seen.",
         image: intensityImage,
         class: mitosisClass,
+        final: (mitosisClass === 'Mild' || mitosisClass === 'Moderate' || mitosisClass === 'Severe') ? 'Presence' : 'Absence'
+
       },
       {
         title: "Keratin Pearls",
@@ -254,6 +261,8 @@ function Result() {
         values: "No presence of keratin pearls seen.",
         image: intensityImage,
         class: keratinClass,
+        final: (keratinClass === 'Mild' || keratinClass === 'Moderate' || keratinClass === 'Severe') ? 'Presence' : 'Absence'
+
       },
       {
         title: "N:C Ratio",
@@ -263,6 +272,8 @@ function Result() {
         values: NCRatio,
         image: intensityImage,
         class: mainClass,
+        final: (mainClass === 'Mild' || mainClass === 'Moderate' || mainClass === 'Severe') ? 'abnormal' : 'normal'
+
       },
       {
         title: "Irregular Stratification",
@@ -272,6 +283,8 @@ function Result() {
         values: 0,
         image: cellImage,
         class: mainClass,
+        final: (mainClass === 'Mild' || mainClass === 'Moderate' || mainClass === 'Severe') ? 'abnormal' : 'normal'
+
       },
     ];
     const allClasses = features.map((feature) => feature.class);
@@ -282,8 +295,8 @@ function Result() {
     }, {});
     // Find the class with the maximum occurrences
     const finalGrade = Object.keys(classCount).reduce((a, b) =>
-    classCount[a] > classCount[b] ? a : b
-  );
+      classCount[a] > classCount[b] ? a : b
+    );
     const resultsPage = (
 
       <Page key="results" style={styles.body}>
@@ -292,39 +305,41 @@ function Result() {
         </Text>
         <Image style={styles.image} src={logo} />
         <Text style={styles.title}>Observation Results</Text>
-  
+
         {/* Render feature table */}
         <View style={styles.tableContainer}>
           <View style={styles.tableRow}>
             <Text style={styles.tableHeader}>Feature</Text>
             <Text style={styles.tableHeader}>Observations</Text>
             <Text style={styles.tableHeader}>Class</Text>
+            <Text style={styles.tableHeader}>Final</Text> {/* New header */}
           </View>
           {features.map((feature, index) => (
             <View style={styles.tableRow} key={index}>
               <Text style={styles.tableData}>{feature.title}</Text>
               <Text style={styles.tableData}>{feature.values}</Text>
               <Text style={styles.tableData}>{feature.class}</Text>
+              <Text style={styles.tableData}>{feature.final}</Text> {/* Display final grade */}
             </View>
           ))}
-                <Text style={styles.text}>
-        <Text className="font-bold">Final Grade Observed: </Text>
-        {finalGrade}
-      </Text>
+          <Text style={styles.text}>
+            <Text className="font-bold">Final Grade Observed: </Text>
+            {finalGrade}
+          </Text>
 
         </View>
-  
+
         {/* Footer with report ID */}
         <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) =>
           `${pageNumber} / ${totalPages} | Report ID: ${reportID}`} fixed
         />
       </Page>
     );
-  
+
     const pages = features.map((feature, index) => {
       const values = feature.values || "-"; // If feature.values is falsy, assign 0
       const category = feature.class ?? "Normal"; // If feature.class is null or undefined, assign 0
-    
+
       return (
         <Page key={index} style={styles.body}>
           <Text style={styles.header} fixed>
@@ -333,18 +348,18 @@ function Result() {
           <Image style={styles.image} src={logo} />
           <Text style={styles.title}>Oral Pre-Cancer Grading</Text>
           <Text style={styles.author}>Overall Test</Text>
-    
+
           <Text style={styles.subtitle} className="font-extrabold">
             {feature.title}
           </Text>
           <Text style={styles.text}>{feature.theory}</Text>
-    
+
           <Image style={styles.orgImg} src={feature.image} />
-    
+
           <Text style={styles.text}>
             <Text className="font-bold">RESULT</Text>
           </Text>
-    
+
           <Text style={styles.text}>
             Total: {values}
           </Text>
@@ -362,10 +377,10 @@ function Result() {
         </Page>
       );
     });
-    
+
     return <Document>{[pages, resultsPage]}</Document>;
-          
-  };  
+
+  };
 
   return (
     <div className="container p-8 mx-auto">
@@ -383,7 +398,7 @@ function Result() {
         </div>
       </form>
 
-        <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <PDFDownloadLink
           document={generatePDF()}
           fileName="Histograde-Report.pdf"
@@ -400,7 +415,7 @@ function Result() {
             </button>
           )}
         </PDFDownloadLink>
-        </div>
+      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ function IncreasedNuclei() {
     const [nuclei, setNuclei] = useState(null);
     const [error, setError] = useState(null);
     const [orgimg, setOrgimg] = useState(null);
+    const [mainClass, setMainClass] = useState("");
     const [resimg, setResimg] = useState(null);
 
     const handleFileChange = (e) => {
@@ -23,14 +24,27 @@ function IncreasedNuclei() {
             const formData = new FormData();
             formData.append('image', imageFile);
 
-            const res = await fetch('http://localhost:5000/api/increasednucleoli', {
+            const res = await fetch('http://localhost:5000/api/increasednucleoli-test', {
                 method: 'POST',
                 body: formData,
             });
             const data = await res.json();
-            setNuclei(data.cells_with_multiple_nuclei);
+            console.log(data)
+            // setNuclei(data.cells_with_multiple_nuclei);
             setOrgimg(`data:image/jpg;base64,${data.original_image}`);
-            setResimg(`data:image/jpg;base64,${data.nuclei_image}`);
+            setResimg(`data:image/jpg;base64,${data.result_image}`);
+            setNuclei(data.nuclei_counts);
+                  
+      // MODel api
+      const modelres = await fetch(
+        "http://localhost:5000/api/model",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const modeldata = await modelres.json();
+      setMainClass(modeldata.class);
 
             
         } catch (error) {
@@ -81,10 +95,32 @@ function IncreasedNuclei() {
                     />
                   }
                 />
-                            <div>
+                            {/* <div>
                            
                                 <p className="mb-2 text-lg font-semibold">Results</p>
                                 <p className="text-gray-700">Increased Nucleoli Count: {nuclei}</p>
+                            </div> */}
+                              <div className="grid my-auto text-left md:flex ">
+                                <div class="w-full md:w-1/2 cursor-pointer rounded-l-lg border bg-[#f0f0f0] p-2 shadow-none duration-150 hover:shadow-xl">
+                                    <h2 class="font-bold text-gray-800 text-2xl text-center mt-5">
+                                        Increased Nucleoli Count
+                                    </h2>
+                                    <div class="w-52 h-52 mx-auto my-10 flex items-center justify-center rounded-full bg-pink-200">
+                                        <p class="font-bold text-4xl text-pink-700">
+                                            {nuclei}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="w-full md:w-1/2 cursor-pointer rounded-l-lg border bg-[#f0f0f0] p-2 shadow-none duration-150 hover:shadow-xl">
+                                    <h2 class="font-bold text-gray-800 text-2xl text-center mt-5">
+                                        Detected Class
+                                    </h2>
+                                    <div class="w-52 h-52 mx-auto my-10 flex items-center justify-center rounded-full bg-green-200">
+                                        <p class="font-bold text-4xl text-green-700">
+                                            {mainClass}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

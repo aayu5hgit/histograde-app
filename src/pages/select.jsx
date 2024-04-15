@@ -1,5 +1,6 @@
 // src/components/Select.js
 import React from 'react';
+import cell from "../assets/cell.gif"
 import { Link } from 'react-router-dom';
 
 function ProductCard({ product }) {
@@ -107,15 +108,29 @@ function Select() {
         <div className="p-10 text-center">
             <h1 className="mb-4 text-4xl font-bold">Features</h1>
         </div>
-        <div className="w-[80%] px-6 py-2 my-3 text-xl font-semibold text-black bg-purple-300 rounded-md cursor-auto hover:cursor-pointer hover:bg-pink-500">
+        {/* <div className="w-[80%] mx-auto px-6 py-2 my-3 text-xl font-semibold text-black bg-purple-300 rounded-md cursor-auto hover:cursor-pointer hover:bg-purple-500">
                 <div className=" p-3">
                     <span className="mr-3 text-xs text-gray-400 uppercase">New Feature</span>
-                    <p className="block text-4xl font-bold text-black capitalize">Take Overall Test</p>
-                    <div className="flex items-center">
-                        <Link to='/result' className="px-6 py-2 my-3 text-xl font-semibold text-black bg-purple-300 rounded-md cursor-auto hover:cursor-pointer hover:bg-pink-500">
-                           Go
+                    <Link to='/result' className="px-6 py-2 my-3 text-black bg-purple-300 rounded-md cursor-auto hover:cursor-pointer block text-4xl font-bold text-black capitalize hover:bg-purple-500">
+                    Take Overall Test
                         </Link>
-                    </div>
+                </div>
+        </div> */}
+        <div className="w-[80%] h-[40%] mx-auto p-3 duration-500 bg-gray-100 shadow-md rounded-xl hover:shadow-xl hover:cursor-pointer">
+                <img src={cell} alt="banner" className="object-cover w-[100%] h-[40%] rounded-t-xl" />
+                <div className="w-full px-4 py-3">
+                    <span className="mr-3 text-xs text-gray-400 uppercase">Feature</span>
+                    <p className="block text-lg font-bold text-black capitalize">Take Overall Test</p>
+                    
+                    <div className="flex items-center justify-between my-4">
+                    <Link
+                        to="/result"
+                        className="flex px-4 py-2 text-white bg-purple-500 rounded-md cursor-auto hover:cursor-pointer hover:bg-pink-500 transition-colors duration-300"
+                    >
+                        Test &nbsp;
+                        <img src="https://api.iconify.design/simple-icons:vitest.svg?color=%23ffffff" className='w-6 h-6' alt="" />
+                    </Link>
+                </div>
                 </div>
         </div>
         <section
